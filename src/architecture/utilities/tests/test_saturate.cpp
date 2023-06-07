@@ -1,7 +1,7 @@
 /*
  ISC License
 
- Copyright (c) 2016, Autonomous Vehicle Systems Lab, University of Colorado at Boulder
+ Copyright (c) 2023, Laboratory for Atmospheric and Space Physics, University of Colorado at Boulder
 
  Permission to use, copy, modify, and/or distribute this software for any
  purpose with or without fee is hereby granted, provided that the above
@@ -17,20 +17,15 @@
 
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "saturateCheck.h"
-#include <Eigen/Dense>
-#include "architecture/utilities/avsEigenSupport.h"
 #include "architecture/utilities/saturate.h"
+#include "architecture/utilities/linearAlgebra.h"
+#include <gtest/gtest.h>
 
 
-uint64_t testSaturate()
-{
-    uint64_t failures = 0;
+TEST(Saturate, testSaturate) {
     Eigen::Vector3d states;
     states << -555, 1.27, 5000000.;
-    Saturate saturator = Saturate(3);
+    auto saturator = Saturate(3);
     Eigen::MatrixXd bounds;
     bounds.resize(3,2);
     bounds << -400., 0, 5, 10, -1, 5000001;
@@ -38,8 +33,5 @@ uint64_t testSaturate()
     states = saturator.saturate(states);
     Eigen::Vector3d expected;
     expected << -400, 5, 5000000;
-    failures += expected != states ? 1 : 0;
-    
-    return failures;
-    
+    EXPECT_TRUE(states == expected);
 }

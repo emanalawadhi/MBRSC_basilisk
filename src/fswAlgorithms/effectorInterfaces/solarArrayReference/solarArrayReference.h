@@ -26,7 +26,6 @@
 #include "cMsgCInterface/AttRefMsg_C.h"
 #include "cMsgCInterface/HingedRigidBodyMsg_C.h"
 
-#define EPS 1e-6                    //!< accuracy to check if a variable is zero
 
 enum attitudeFrame{
     referenceFrame = 0,

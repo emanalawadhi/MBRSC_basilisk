@@ -1,7 +1,7 @@
 
 # ISC License
 #
-# Copyright (c) 2016, Autonomous Vehicle Systems Lab, University of Colorado at Boulder
+# Copyright (c) 2023, Autonomous Vehicle Systems Lab, University of Colorado at Boulder
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -24,6 +24,7 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
+import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,6 +33,7 @@ from Basilisk.architecture import bskLogging
 from Basilisk.architecture import sim_model
 from Basilisk.utilities import simulationArchTypes
 from Basilisk.utilities.simulationProgessBar import SimulationProgressBar
+from Basilisk.utilities import deprecated
 
 # Point the path to the module storage area
 
@@ -366,6 +368,12 @@ class SimBaseClass:
         self.TotalSim.addNewProcess(proc.processData)
         return proc
 
+    @deprecated.deprecated(
+        "2024/04/01",
+        "PythonProcess and Python modules that inherit from "
+        "'simulationArchTypes.PythonModelClass' are deprecated. "
+        "See 'examples/scenarioAttitudePointingPy' for details.",
+    )
     def CreateNewPythonProcess(self, procName, priority = -1):
         """
         Creates the python analog of a sim-level process, that exists only on the python level in self.pyProcList

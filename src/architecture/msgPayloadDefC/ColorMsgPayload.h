@@ -1,7 +1,7 @@
 /*
  ISC License
 
- Copyright (c) 2016, Autonomous Vehicle Systems Lab, University of Colorado at Boulder
+ Copyright (c) 2023, Autonomous Vehicle Systems Lab, University of Colorado at Boulder
 
  Permission to use, copy, modify, and/or distribute this software for any
  purpose with or without fee is hereby granted, provided that the above
@@ -17,12 +17,16 @@
 
  */
 
+#ifndef _COLOR_MESSAGE_H
+#define _COLOR_MESSAGE_H
 
-#ifndef GAUSS_MARKOV_CHECK_
-#define GAUSS_MARKOV_CHECK_
 
-#include <Eigen/Dense>
 
-uint64_t testGaussMarkov();
-Eigen::Vector2d calculateSD(Eigen::MatrixXd, int64_t numPts);
+/*! @brief Structure used to define RGBA color */
+typedef struct {
+    int colorRGBA[4]; //!< [-] 0-255 Color values in RGBA format
+}ColorMsgPayload;
+
+
+
 #endif

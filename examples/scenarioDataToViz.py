@@ -171,7 +171,7 @@ def run(show_plots, attType):
     # to save the BSK data to a file, uncomment the saveFile line below
     if vizFound:
         viz = vizSupport.enableUnityVisualization(scSim, simTaskName, scList
-                                                  # , saveFile=fileName
+                                                   , saveFile=fileName
                                                   )
         viz.settings.showSpacecraftLabels = 1
         viz.settings.spacecraftShadowBrightness = 0.2

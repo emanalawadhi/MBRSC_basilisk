@@ -269,10 +269,10 @@ def run(show_plots, useJitterSimple, useAltBodyFrame):
     scObject.ModelTag = "bsk-Sat"
     
     # define the simulation inertia -MBZ
-    I = [455.38, 2.99, -8.08082,
-         2.99, 450.28, -0.5733578,
-         -8.08082, -0.5733578, 260.56]
-    scObject.hub.mHub = 719.942  # kg - spacecraft mass - MBZ 
+    I = [517.2, 0., 0.,
+         0., 523.6, 0.,
+         0., 0., 300.2] #kg m^2
+    scObject.hub.mHub = 707.0  # kg - spacecraft mass
     scObject.hub.r_BcB_B = [[0.0], [0.0], [0.0]]  # m - position vector of body-fixed point B relative to CM
     scObject.hub.IHubPntBc_B = unitTestSupport.np2EigenMatrix3d(I)
 
@@ -295,12 +295,12 @@ def run(show_plots, useJitterSimple, useAltBodyFrame):
     #edited by Ahmed
     # setup the orbit using classical orbit elements
     oe = orbitalMotion.ClassicElements()
-    oe.a = 512044.6  # meters -MBZ
-    oe.e = 0.00074680
-    oe.i = 97.4 * macros.D2R
-    oe.Omega = 48.2 * macros.D2R
-    oe.omega = 347.8 * macros.D2R
-    oe.f = 85.3 * macros.D2R
+    oe.a = (6371 + 507)*1000.  # meters
+    oe.e = 0.001
+    oe.i = 97.46 * macros.D2R
+    oe.Omega = 331.53 * macros.D2R
+    oe.omega = 19.83 * macros.D2R
+    oe.f = 0.0 * macros.D2R #trueanomaly
     rN, vN = orbitalMotion.elem2rv(mu, oe)
     scObject.hub.r_CN_NInit = rN  # m   - r_CN_N
     scObject.hub.v_CN_NInit = vN  # m/s - v_CN_N

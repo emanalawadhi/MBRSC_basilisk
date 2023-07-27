@@ -76,7 +76,7 @@ from Basilisk.fswAlgorithms import locationPointing
 # import FSW Algorithm related support
 from Basilisk.fswAlgorithms import mrpFeedback
 from Basilisk.simulation import extForceTorque
-from Basilisk.simulation import groundLocation
+from Basilisk.simulation import sunSafePoint
 from Basilisk.simulation import simpleNav
 # import simulation related support
 from Basilisk.simulation import spacecraft
@@ -151,7 +151,7 @@ def run(show_plots):
     scSim = SimulationBaseClass.SimBaseClass()
 
     # set the simulation time variable used later on
-    simulationTime = macros.min2nano(90.)
+    simulationTime = macros.min2nano(20.)
 
     #
     #  create the simulation process
@@ -169,7 +169,7 @@ def run(show_plots):
     # initialize spacecraft object and set properties
     scObject = spacecraft.Spacecraft()
     scObject.ModelTag = "bsk-Sat"
-   # define the simulation inertia
+    # define the simulation inertia
     I = [517.2, 0., 0.,
          0., 523.6, 0.,
          0., 0., 300.2] #kg m^2
@@ -225,30 +225,29 @@ def run(show_plots):
     scSim.AddModelToTask(simTaskName, sNavObject)
     sNavObject.scStateInMsg.subscribeTo(scObject.scStateOutMsg)
 
-    # Create the ground location
-    groundStation = groundLocation.GroundLocation()
-    groundStation.ModelTag = "MBRSCGroundStation"
-    groundStation.planetRadius = astroFunctions.E_radius*1e3  # meters
-    groundStation.specifyLocation(np.radians(25.225947), np.radians(55.465058), 15)
-    groundStation.minimumElevation = np.radians(10.)
-    groundStation.maximumRange = 1e9  # meters
-    groundStation.addSpacecraftToModel(scObject.scStateOutMsg)
-    scSim.AddModelToTask(simTaskName, groundStation)
+    # # Create the ground location
+    # groundStation = groundLocation.GroundLocation()
+    # groundStation.ModelTag = "BoulderGroundStation"
+    # groundStation.planetRadius = astroFunctions.E_radius*1e3  # meters
+    # groundStation.specifyLocation(np.radians(40.009971), np.radians(-105.243895), 1624)
+    # groundStation.minimumElevation = np.radians(10.)
+    # groundStation.maximumRange = 1e9  # meters
+    # groundStation.addSpacecraftToModel(scObject.scStateOutMsg)
+    # scSim.AddModelToTask(simTaskName, groundStation)
 
     #
     #   setup the FSW algorithm tasks
     #
 
     # setup Boulder pointing guidance module
-    locPointConfig = locationPointing.locationPointingConfig()
-    locPointWrap = scSim.setModelDataWrap(locPointConfig)
-    locPointWrap.ModelTag = "locPoint"
-    scSim.AddModelToTask(simTaskName, locPointWrap, locPointConfig)
-    locPointConfig.pHat_B = [0, 0, 1]
-    locPointConfig.scAttInMsg.subscribeTo(sNavObject.attOutMsg)
-    locPointConfig.useBoresightRateDamping = 1
-    locPointConfig.scTransInMsg.subscribeTo(sNavObject.transOutMsg)
-    locPointConfig.locationInMsg.subscribeTo(groundStation.currentGroundStateOutMsg)
+    sunSafePointConfig = sunSafePoint.sunSafePointingConfig()
+    sunSafePointWrap = scSim.setModelDataWrap(sunSafePointConfig)
+    sunSafePointWrap.ModelTag = "sunPoint"
+    scSim.AddModelToTask(simTaskName, sunSafePointWrap, sunSafePointConfig)
+    sunSafePointConfig.pHat_B = [0, 0, 1]
+    sunSafePointConfig.sunDirectionInMsg.subscribeTo(sNavObject.attGuidanceOutMsg)
+    sunSafePointConfig.useBoresightRateDamping = 1
+    #sunSafePointConfig.locationInMsg.subscribeTo(groundStation.currentGroundStateOutMsg)
     # grMsgData = messaging.GroundStateMsgPayload()
     # grMsg = messaging.GroundStateMsg().write(grMsgData)
     # locPointConfig.locationInMsg.subscribeTo(grMsg)
@@ -258,7 +257,7 @@ def run(show_plots):
     mrpControlWrap = scSim.setModelDataWrap(mrpControlConfig)
     mrpControlWrap.ModelTag = "mrpFeedback"
     scSim.AddModelToTask(simTaskName, mrpControlWrap, mrpControlConfig)
-    mrpControlConfig.guidInMsg.subscribeTo(locPointConfig.attGuidOutMsg)
+    mrpControlConfig.guidInMsg.subscribeTo(sunSafePointConfig.attGuidanceOutMsg)
     mrpControlConfig.K = 5.5
     mrpControlConfig.Ki = -1  # make value negative to turn off integral feedback
     mrpControlConfig.P = 30.0
@@ -273,7 +272,7 @@ def run(show_plots):
     numDataPoints = 100
     samplingTime = unitTestSupport.samplingTime(simulationTime, simulationTimeStep, numDataPoints)
     mrpLog = mrpControlConfig.cmdTorqueOutMsg.recorder(samplingTime)
-    attErrLog = locPointConfig.attGuidOutMsg.recorder(samplingTime)
+    attErrLog = sunSafePointConfig.attGuidOutMsg.recorder(samplingTime)
     snAttLog = sNavObject.attOutMsg.recorder(samplingTime)
     snTransLog = sNavObject.transOutMsg.recorder(samplingTime)
     scSim.AddModelToTask(simTaskName, mrpLog)
@@ -294,15 +293,15 @@ def run(show_plots):
     # if this scenario is to interface with the BSK Viz, uncomment the following lines
     if vizSupport.vizFound:
         viz = vizSupport.enableUnityVisualization(scSim, simTaskName, scObject
-                                                  , saveFile=fileName
+                                                  # , saveFile=fileName
                                                   )
-        vizSupport.addLocation(viz, stationName="MBRSC Station"
-                               , parentBodyName=earth.displayName
-                               , r_GP_P=groundStation.r_LP_P_Init
-                               , fieldOfView=np.radians(160.)
-                               , color='pink'
-                               , range=2000.0*1000  # meters
-                               )
+        # vizSupport.addLocation(viz, stationName="Boulder Station"
+        #                        , parentBodyName=earth.displayName
+        #                        , r_GP_P=groundStation.r_LP_P_Init
+        #                        , fieldOfView=np.radians(160.)
+        #                        , color='pink'
+        #                        , range=2000.0*1000  # meters
+        #                        )
         viz.settings.spacecraftSizeMultiplier = 1.5
         viz.settings.showLocationCommLines = 1
         viz.settings.showLocationCones = 1

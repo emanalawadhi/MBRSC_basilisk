@@ -259,6 +259,7 @@ Small Body Navigation Simulations
 
     Proximity Operations Hybrid EKF <scenarioSmallBodyNav>
     Non-Keplerian Acceleration Estimation using UKF <scenarioSmallBodyNavUKF>
+    Landmarks-based Navigation <scenarioSmallBodyLandmarks>
 
 Monte Carlo Simulations
 -----------------------
@@ -322,6 +323,7 @@ Advanced Simulation Options
 
    Setting Type of Integrator <scenarioIntegrators>
    Using a Variable Time Step Integrator <scenarioVariableTimeStepIntegrators>
+   Comparison of different integrators <scenarioIntegratorsComparison>
    Using a Python BSK Module Inherited from SysModel Class <scenarioAttitudePointingPy>
    Using a Python BSK Module (depreciated)  <scenarioAttitudePointingPyDEPRECATED>
    Changing the bskLog Verbosity from Python <scenarioBskLog>

@@ -12,6 +12,10 @@ Version |release|
 -----------------
 - text here
 
+Version 2.2.0
+-------------
+- VizInterface has been updated to use 4.5.0 version of ZMQ library.  Be sure to use Vizard 2.1.5 or newer.
+
 Version 2.1.7
 -------------
 - The way to include effector bodies in Vizard has changed in this release.

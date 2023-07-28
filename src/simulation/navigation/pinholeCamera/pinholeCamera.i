@@ -17,18 +17,33 @@
 
  */
 
-#include "svIntegratorEuler.h"
 
-svIntegratorEuler::svIntegratorEuler(DynamicObject* dyn)
-    : svIntegratorRungeKutta(dyn, svIntegratorEuler::getCoefficients())
-{
-}
+%module pinholeCamera
+%{
+    #include "pinholeCamera.h"
+%}
 
-RKCoefficients<1> svIntegratorEuler::getCoefficients()
-{
-    RKCoefficients<1> coefficients;
+%pythoncode %{
+    from Basilisk.architecture.swig_common_model import *
+%}
+%include "std_string.i"
+%include "swig_conly_data.i"
+%include "swig_eigen.i"
 
-    coefficients.bArray = {1.};
+%include "sys_model.h"
+%include "pinholeCamera.h"
+%include "std_vector.i"
 
-    return coefficients;
-}
+
+%include "architecture/msgPayloadDefC/EphemerisMsgPayload.h"
+struct EphemerisMsg_C;
+%include "architecture/msgPayloadDefC/SCStatesMsgPayload.h"
+struct SCStatesMsg_C;
+%include "architecture/msgPayloadDefC/LandmarkMsgPayload.h"
+struct LandmarkMsg_C;
+
+
+%pythoncode %{
+import sys
+protectAllClasses(sys.modules[__name__])
+%}

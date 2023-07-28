@@ -25,7 +25,6 @@ Basilisk Release Notes
     - landing dynamics force/torque effector that computes the interaction between a CAD spacecraft model and a
       CAD asteroid or lunar surface terrain.
     - spacecraft charging related modules
-    - ability to integrate dynamics of multiple spacecraft simultaneously
     - support a way to do thread-safe messaging
     - ability to integrate Python Basilisk modules in the same task and process as C/C++ modules
     - automated documentation build system when code is pushed to the repo
@@ -34,6 +33,13 @@ Basilisk Release Notes
 
 Version |release|
 -----------------
+- Created a new :ref:`pinholeCamera` module to support generation of landmarks-based measurements around a
+  small body.
+- A new integrated example script :ref:`scenarioSmallBodyLandmarks` demonstrates the use of the pinhole camera module
+
+
+Version 2.2.0 (June 28, 2023)
+-----------------------------
 - Created new way to define Python modules by inheriting from ``Basilisk.architecture.sysModel.SysModel``.
   See :ref:`pyModules` for details.
 - Added the ability to integrate the ODE's of two or more Basilisk modules that are ``DynamicObject`` class
@@ -74,6 +80,12 @@ Version |release|
 - Refactored the :ref:`prescribedMotionStateEffector` dynamics module to vary the prescribed states across the dynamics
   integration time step.
 - The encryption build option for the project's conan zmq dependency is disabled because it is uneeded.
+- Added an optional ``controllerStatus`` variable and ``deviceStatusInMsg`` message to the :ref:`simpleInstrumentController` to 
+  match the functionality of the corresponding data and power modules
+- Corrected tasks priorities in several scenarios and added checks in two modules to ensure that C MSG read errors are not thrown
+- Reworked how integrators are implemented. New Runge-Kutta integrators may
+  now be added simply by specifying the relevant coefficients.
+- Added a scenario that showcases differences between integrators. See :ref:`scenarioIntegratorsComparison`
 
 
 Version 2.1.7 (March 24, 2023)

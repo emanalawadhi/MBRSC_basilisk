@@ -422,6 +422,18 @@ class thrusterFactory(object):
         TH.areaNozzle = 0.07
 
         return
+    
+    def MBZ_Thruster(self, TH):
+        # maximum thrust [N]
+        TH.MaxThrust = 0.017
+        # minimum thruster on time [s]
+        TH.MinOnTime = 137.8
+        # Isp value [s]
+        TH.steadyIsp = 1100
+        # nozzle area [m^2]
+        TH.areaNozzle = 0.07
+
+        return
 
     def Blank_Thruster(self, TH):
         # this method doesn't set any thruster properties.  Rather, it is assumed that all thruster

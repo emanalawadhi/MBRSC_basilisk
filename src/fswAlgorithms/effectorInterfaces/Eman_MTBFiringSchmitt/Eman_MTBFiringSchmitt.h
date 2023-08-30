@@ -21,7 +21,7 @@
 #define _MTB_FIRING_SCHMITT_H
 
 #include <stdint.h>
-#include <fswDefinitions.h>
+#include "fswAlgorithms/fswUtilities/fswDefinitions.h"
 
 #include "cMsgCInterface/MTBArrayConfigMsg_C.h"
 #include "cMsgCInterface/MTBCmdMsg_C.h"

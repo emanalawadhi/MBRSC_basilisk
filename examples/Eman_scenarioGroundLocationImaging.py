@@ -182,7 +182,7 @@ def run(show_plots):
     scSim = SimulationBaseClass.SimBaseClass()
 
     # set the simulation time variable used later on
-    simulationTime = macros.min2nano(1440.)
+    simulationTime = macros.min2nano(100.)
 
     #
     #  create the simulation process
@@ -211,6 +211,42 @@ def run(show_plots):
     # add spacecraft object to the simulation process
     scSim.AddModelToTask(simTaskName, scObject, ModelPriority=100)
 
+    # create the dynamics task and specify the simulation time step information
+    #simulationTimeStep = macros.sec2nano(10.0)
+    #simulationTime = macros.min2nano(1120.0)
+    #dynProcess.addTask(scSim.CreateNewTask(simTaskName, simulationTimeStep))
+
+    # setup celestial object ephemeris module
+    gravBodyEphem = planetEphemeris.PlanetEphemeris()
+    gravBodyEphem.ModelTag = 'planetEphemeris'
+    scSim.AddModelToTask(simTaskName, gravBodyEphem)
+    gravBodyEphem.setPlanetNames(planetEphemeris.StringVector(["Itokawa", "earth"]))
+
+    # specify orbits of gravitational bodies
+    oeAsteroid = planetEphemeris.ClassicElementsMsgPayload()
+    oeAsteroid.a = 1.3241 * orbitalMotion.AU * 1000  # meters
+    oeAsteroid.e = 0.2801
+    oeAsteroid.i = 1.6214*macros.D2R
+    oeAsteroid.Omega = 69.081*macros.D2R
+    oeAsteroid.omega = 162.82*macros.D2R
+    oeAsteroid.f = 90.0*macros.D2R
+
+    oeEarth = planetEphemeris.ClassicElementsMsgPayload()
+    oeEarth.a = orbitalMotion.AU * 1000  # meters
+    oeEarth.e = 0.0167086
+    oeEarth.i = 7.155 * macros.D2R
+    oeEarth.Omega = 174.9 * macros.D2R
+    oeEarth.omega = 288.1 * macros.D2R
+    oeEarth.f = 270.0 * macros.D2R
+
+    # specify celestial object orbit
+    gravBodyEphem.planetElements = planetEphemeris.classicElementVector([oeAsteroid, oeEarth])
+    # specify celestial object orientation
+    gravBodyEphem.rightAscension = planetEphemeris.DoubleVector([0.0 * macros.D2R, 0.0 * macros.D2R])
+    gravBodyEphem.declination = planetEphemeris.DoubleVector([0.0 * macros.D2R, 0.0 * macros.D2R])
+    gravBodyEphem.lst0 = planetEphemeris.DoubleVector([0.0 * macros.D2R, 0.0 * macros.D2R])
+    gravBodyEphem.rotRate = planetEphemeris.DoubleVector(
+        [360 * macros.D2R / (12.132 * 3600.), 360 * macros.D2R / (24. * 3600.)])
     
     # clear prior gravitational body and SPICE setup definitions
     gravFactory = simIncludeGravBody.gravBodyFactory()

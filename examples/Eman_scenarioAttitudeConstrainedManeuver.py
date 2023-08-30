@@ -160,7 +160,7 @@ from Basilisk.utilities import macros
 from Basilisk.utilities import orbitalMotion
 from Basilisk.utilities import simIncludeGravBody
 from Basilisk.utilities import unitTestSupport  # general support file with common unit test functions
-from Basilisk.utilities import fswSetupRW
+from Basilisk.utilities import fswSetupThrusters
 from Basilisk.utilities import simIncludeRW
 from Basilisk.utilities import astroFunctions
 # attempt to import vizard

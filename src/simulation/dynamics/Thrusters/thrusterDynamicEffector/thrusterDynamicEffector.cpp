@@ -146,8 +146,8 @@ void ThrusterDynamicEffector::ConfigureThrustRequests(double currentTime)
     std::vector<THRSimConfig>::iterator it;
     std::vector<double>::iterator CmdIt;
     //! - Iterate through the list of thruster commands that we read in.
-    for(CmdIt = NewThrustCmds.begin(), it = this->thrusterData.begin();
-        it != this->thrusterData.end(); it++, CmdIt++)
+    for (CmdIt = NewThrustCmds.begin(), it = this->thrusterData.begin();
+         it != this->thrusterData.end(); it++, CmdIt++)
     {
         if(*CmdIt >= it->MinOnTime) /// - Check to see if we have met minimum for each thruster
         {
